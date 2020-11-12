@@ -1,0 +1,12 @@
+# depslib dependency file v1.0
+1605206727 source:c:\users\rodrigo\documents\github\base-converter\base converter\main.c
+	<stdio.h>
+	<stdlib.h>
+	<locale.h>
+	<ctype.h>
+	<math.h>
+	<stdbool.h>
+	<conio.h>
+	<string.h>
+	<locale.h>
+
