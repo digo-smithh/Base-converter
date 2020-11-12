@@ -36,7 +36,20 @@ void doAsciiArt()
     }
 }
 
-char getValue(int value)
+int isValid(char* number, int currentBase)
+{
+    int i;
+    for(i = 0; i < strlen(number); i++)
+    {
+        if(number[i] >= currentBase)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+char getCharValue(int value)
 {
     char num[] =
     {
@@ -126,7 +139,7 @@ int getCommaPosition(char number[], int size)
     return -1;
 }
 
-double getCharValue(char value)
+double getDoubleValue(char value)
 {
     if (isdigit(value))
         return (double) value - 48;
@@ -143,7 +156,7 @@ char * fromTen(double number, int base)
 
     while (whole > 0)
     {
-        inverted[time] = getValue((whole % base));
+        inverted[time] = getCharValue((whole % base));
         whole = whole / base;
         time += 1;
 
@@ -169,7 +182,7 @@ char * fromTen(double number, int base)
                 break;
 
             decimal = decimal * base;
-            inverted[time] = getValue(decimal);
+            inverted[time] = getCharValue(decimal);
             decimal = decimal - (int) decimal;
         }
     }
@@ -191,7 +204,7 @@ double toTen(char * number, int base)
 
     for (index = comma - 1, powerIndex = 0; index >= 0; index--, powerIndex++)
     {
-        double value = getCharValue(number[index]);
+        double value = getDoubleValue(number[index]);
         newNumber = newNumber + value * pow(base, powerIndex);
     }
 
@@ -199,7 +212,7 @@ double toTen(char * number, int base)
     {
         for (index = comma + 1, powerIndex = 1; index < size - 1; index++, powerIndex++)
         {
-            double value = getCharValue(number[index]);
+            double value = getDoubleValue(number[index]);
             newNumber = newNumber + value * pow((double) 1 / base, (double) powerIndex);
         }
     }
@@ -223,48 +236,38 @@ int main()
 
     printf("\n  Enter the current base: ");
     fflush(stdout);
-    if (scanf("%d", & currentBase) == 0)
+
+    while (scanf("%d", & currentBase) == 0 || currentBase < 2 || currentBase > 36)
     {
-        while (scanf("%d", & currentBase) == 0)
-        {
-            printf("\n  Invalid input. Enter the current base again: ");
-            fflush(stdout);
-            scanf("%d", & currentBase);
-            fflush(stdin);
-        }
-    }
-    else
-    {
-        while (currentBase < 2 || currentBase > 36)
-        {
-            printf("\n  Invalid input. Enter the current base again: ");
-            fflush(stdout);
-            scanf("%d", & currentBase);
-            fflush(stdin);
-        }
+        printf("\n  The base is invalid. Enter the current base again: ");
+        fflush(stdout);
+        scanf("%d", & currentBase);
+        fflush(stdin);
     }
 
+    int baseIsValid = isValid(number, currentBase);
+
+    while (baseIsValid == 0)
+    {
+        printf("\n  The number contains characters which are not in base %i. Enter the current base again: ", currentBase);
+        fflush(stdout);
+        scanf("%d", & currentBase);
+        fflush(stdin);
+        baseIsValid = isValid(number, currentBase);
+    }
+
+
+
     printf("\n  Enter the future base: ");
-    if (scanf("%d", & futureBase) == 0)
+
+    while (scanf("%d", & futureBase) == 0 || futureBase < 2 || futureBase > 36)
     {
-        while (scanf("%d", & futureBase) == 0)
-        {
-            printf("\n  Invalid input. Enter the future base again: ");
-            fflush(stdout);
-            scanf("%d", & futureBase);
-            fflush(stdin);
-        }
+        printf("\n  The base is invalid. Enter the future base again: ");
+        fflush(stdout);
+        scanf("%d", & futureBase);
+        fflush(stdin);
     }
-    else
-    {
-        while (futureBase < 2 || futureBase > 36)
-        {
-            printf("\n  Invalid input. Enter the future base again: ");
-            fflush(stdout);
-            scanf("%d", & futureBase);
-            fflush(stdin);
-        }
-    }
+
 
     char * n = (char * ) malloc(1000 * sizeof(char));
 
