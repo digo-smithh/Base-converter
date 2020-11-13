@@ -39,26 +39,80 @@ void doAsciiArt()
     }
 }
 
-int isValid()
+int currentBaseIsValid()
 {
     size_t i = 0;
     while (number[i] != '\n')
     {
-        if((int)number[i] >= currentBase)
+        int intNumber = number[i] - '0';
+        if(intNumber >= currentBase)
         {
             return 0;
         }
+        i++;
     }
     return 1;
 }
 
-int isCorrect()
+int currentBaseIsCorrect()
 {
-    if (scanf("%i", &currentBase) != 1 || currentBase < 2 || currentBase > 36)
+    int i;
+    char resultScan[1000];
+    scanf("%s", &resultScan);
+    fflush(stdin);
+
+    while (resultScan[i] != '\000')
     {
-        fflush(stdin);
-        return 0;
+        if(resultScan[i] < 48 || resultScan[i] > 57)
+        {
+            return 0;
+        }
+        i++;
     }
+
+    currentBase = atoi(resultScan);
+
+    if (currentBase < 2 || currentBase > 36)
+        return 0;
+
+    return 1;
+}
+
+int futureBaseIsValid()
+{
+    size_t i = 0;
+    while (number[i] != '\n')
+    {
+        int intNumber = number[i] - '0';
+        if(intNumber >= futureBase)
+        {
+            return 0;
+        }
+        i++;
+    }
+    return 1;
+}
+
+int futureBaseIsCorrect()
+{
+    int i;
+    char resultScan[1000];
+    scanf("%s", &resultScan);
+    fflush(stdin);
+
+    while (resultScan[i] != '\000')
+    {
+        if(resultScan[i] < 48 || resultScan[i] > 57)
+        {
+            return 0;
+        }
+        i++;
+    }
+
+    futureBase = atoi(resultScan);
+
+    if (futureBase < 2 || futureBase > 36)
+        return 0;
 
     return 1;
 }
@@ -251,29 +305,31 @@ int main()
     printf("\n  Enter the current base: ");
     fflush(stdout);
 
-    int baseIsCorrect = isCorrect();
-    int baseIsValid = isValid();
+    int baseIsCorrect = currentBaseIsCorrect();
+    int baseIsValid = 1;
+    if (baseIsCorrect == 1)
+        baseIsValid = currentBaseIsValid();
 
     while (baseIsValid == 0 || baseIsCorrect == 0)
     {
-        printf("\n  The base is invalid. Enter the current base again: ", currentBase);
+        printf("\n  The base is invalid. Enter the current base again: ");
         fflush(stdout);
-        baseIsCorrect = isCorrect();
-        baseIsValid = isValid();
+        baseIsCorrect = currentBaseIsCorrect();
+        baseIsValid = 1;
+        if (baseIsCorrect == 1)
+            baseIsValid = currentBaseIsValid();
     }
 
     printf("\n  Enter the future base: ");
     fflush(stdout);
 
-    baseIsCorrect = isCorrect();
-    baseIsValid = isValid();
+    baseIsCorrect = futureBaseIsCorrect();
 
-    while (baseIsValid == 0 || baseIsCorrect == 0)
+    while (baseIsCorrect == 0)
     {
         printf("\n  The base is invalid. Enter the future base again: ");
         fflush(stdout);
-        baseIsCorrect = isCorrect();
-        baseIsValid = isValid();
+        baseIsCorrect = futureBaseIsCorrect();
     }
 
 
@@ -298,6 +354,5 @@ int main()
 
     printf("\n  Result: %s\n\n", newNumber);
 
-    free(newNumber);
     return 0;
 }
