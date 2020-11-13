@@ -16,6 +16,9 @@
 
 #include <locale.h>
 
+char *number;
+int currentBase, futureBase;
+
 void doAsciiArt()
 {
     FILE * arq;
@@ -36,16 +39,27 @@ void doAsciiArt()
     }
 }
 
-int isValid(char* number, int currentBase)
+int isValid()
 {
-    int i;
-    for(i = 0; i < strlen(number); i++)
+    size_t i = 0;
+    while (number[i] != '\n')
     {
-        if(number[i] >= currentBase)
+        if((int)number[i] >= currentBase)
         {
             return 0;
         }
     }
+    return 1;
+}
+
+int isCorrect()
+{
+    if (scanf("%i", &currentBase) != 1 || currentBase < 2 || currentBase > 36)
+    {
+        fflush(stdin);
+        return 0;
+    }
+
     return 1;
 }
 
@@ -223,49 +237,43 @@ double toTen(char * number, int base)
 int main()
 {
     doAsciiArt();
+    number = (char *) malloc(1000 * sizeof(char));
+
     printf("\n        Developed by: Eduardo Migueis - 19167 and Rodrigo Smith - 19197\n");
     fflush(stdout);
-
-    char number[1000];
-    int currentBase = 0, futureBase = 0;
 
     printf("\n  Enter the number to be converted: ");
     fflush(stdout);
     fgets(number, 1000, stdin);
+    strcat(number, "\0");
     fflush(stdin);
 
     printf("\n  Enter the current base: ");
     fflush(stdout);
 
-    while (scanf("%d", & currentBase) == 0 || currentBase < 2 || currentBase > 36)
+    int baseIsCorrect = isCorrect();
+    int baseIsValid = isValid();
+
+    while (baseIsValid == 0 || baseIsCorrect == 0)
     {
-        printf("\n  The base is invalid. Enter the current base again: ");
+        printf("\n  The base is invalid. Enter the current base again: ", currentBase);
         fflush(stdout);
-        scanf("%d", & currentBase);
-        fflush(stdin);
+        baseIsCorrect = isCorrect();
+        baseIsValid = isValid();
     }
-
-    int baseIsValid = isValid(number, currentBase);
-
-    while (baseIsValid == 0)
-    {
-        printf("\n  The number contains characters which are not in base %i. Enter the current base again: ", currentBase);
-        fflush(stdout);
-        scanf("%d", & currentBase);
-        fflush(stdin);
-        baseIsValid = isValid(number, currentBase);
-    }
-
-
 
     printf("\n  Enter the future base: ");
+    fflush(stdout);
 
-    while (scanf("%d", & futureBase) == 0 || futureBase < 2 || futureBase > 36)
+    baseIsCorrect = isCorrect();
+    baseIsValid = isValid();
+
+    while (baseIsValid == 0 || baseIsCorrect == 0)
     {
         printf("\n  The base is invalid. Enter the future base again: ");
         fflush(stdout);
-        scanf("%d", & futureBase);
-        fflush(stdin);
+        baseIsCorrect = isCorrect();
+        baseIsValid = isValid();
     }
 
 
