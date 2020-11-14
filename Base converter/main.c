@@ -164,7 +164,6 @@ char getCharValue(int value)
 
 char* resizeArray(char array[], int oldSize, int newSize)
 {
-
     char* newArray = (char * ) malloc(sizeof(char) * newSize);
 
     if (oldSize < newSize)
@@ -187,6 +186,8 @@ char* resizeArray(char array[], int oldSize, int newSize)
 
 char* invertString(char array[])
 {
+    size_t size = strlen(array);
+    array[size - 1] = '\0';
     char * invertedString = (char*) malloc(sizeof(char) * strlen(array));
     strcpy(invertedString, array);
     strrev(invertedString);
@@ -217,7 +218,7 @@ double getDoubleValue(char value)
 
 char * fromTen(double number, int base)
 {
-    char * inverted = (char * ) malloc(sizeof(char) * 20);
+    char * inverted = (char *) malloc(sizeof(char) * 20);
     int time = 0;
     int whole = (int) number;
     double decimal = number - whole;
@@ -234,7 +235,6 @@ char * fromTen(double number, int base)
 
     inverted = resizeArray(inverted, strlen(inverted), time);
     inverted = invertString(inverted);
-
 
     if (decimal > 0.0)
     {
