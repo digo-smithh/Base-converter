@@ -42,12 +42,20 @@ void doAsciiArt()
 int currentBaseIsValid()
 {
     size_t i = 0;
-    while (number[i] != '\n')
+    while (number[i] != '\000')
     {
-        int intNumber = number[i] - '0';
-        if(intNumber >= currentBase)
+        if(number[i] != '.')
         {
-            return 0;
+            int intNumber;
+            if(isalpha(number[i]))
+                intNumber = (int)number[i] - 54;
+            else
+                intNumber = number[i] - '0';
+
+            if(intNumber >= currentBase)
+            {
+                return 0;
+            }
         }
         i++;
     }
@@ -81,12 +89,20 @@ int currentBaseIsCorrect()
 int futureBaseIsValid()
 {
     size_t i = 0;
-    while (number[i] != '\n')
+    while (number[i] != '\000')
     {
-        int intNumber = number[i] - '0';
-        if(intNumber >= futureBase)
+        if(number[i] != '.')
         {
-            return 0;
+            int intNumber;
+            if(isalpha(number[i]))
+                intNumber = (int)number[i] - 54;
+            else
+                intNumber = number[i] - '0';
+            if(intNumber >= futureBase)
+            {
+                return 0;
+            }
+
         }
         i++;
     }
@@ -184,11 +200,10 @@ char* resizeArray(char array[], int oldSize, int newSize)
     return newArray;
 }
 
-char* invertString(char array[])
+char* invertString(char* array)
 {
     size_t size = strlen(array);
-    array[size - 1] = '\0';
-    char * invertedString = (char*) malloc(sizeof(char) * strlen(array));
+    char * invertedString = (char*) malloc(sizeof(char) * size);
     strcpy(invertedString, array);
     strrev(invertedString);
 
@@ -200,7 +215,7 @@ int getCommaPosition(char number[], int size)
     int i = 0;
     for (; i < size; i++)
     {
-        if (number[i] == ',')
+        if (number[i] == ',' || number[i] == '.')
         {
             return i;
         }
@@ -219,8 +234,10 @@ double getDoubleValue(char value)
 char * fromTen(double number, int base)
 {
     char * inverted = (char *) malloc(sizeof(char) * 20);
+    inverted[19] = '\0';
     int time = 0;
-    int whole = (int) number;
+    double wholeDouble = floor(number);
+    int whole = wholeDouble;
     double decimal = number - whole;
 
     while (whole > 0)
@@ -234,6 +251,7 @@ char * fromTen(double number, int base)
     }
 
     inverted = resizeArray(inverted, strlen(inverted), time);
+    inverted[time] = '\0';
     inverted = invertString(inverted);
 
     if (decimal > 0.0)
@@ -253,6 +271,7 @@ char * fromTen(double number, int base)
             inverted[time] = getCharValue(decimal);
             decimal = decimal - (int) decimal;
         }
+        inverted[time] = '\0';
     }
 
     return inverted;
@@ -281,7 +300,10 @@ double toTen(char * number, int base)
         for (index = comma + 1, powerIndex = 1; index < size - 1; index++, powerIndex++)
         {
             double value = getDoubleValue(number[index]);
-            newNumber = newNumber + value * pow((double) 1 / base, (double) powerIndex);
+            double power = pow((double) 1 / base, (double) powerIndex);
+            double multiplying = value * power;
+            double somatory = newNumber + multiplying;
+            newNumber = somatory;
         }
     }
 
@@ -298,7 +320,7 @@ int main()
 
     printf("\n  Enter the number to be converted: ");
     fflush(stdout);
-    fgets(number, 1000, stdin);
+    scanf("%s",number);
     strcat(number, "\0");
     fflush(stdin);
 
@@ -346,8 +368,10 @@ int main()
 
     if (number[0] == '-')
     {
-        char negativeNumber[1000];
+        size_t size = strlen(newNumber) + 1;
+        char * negativeNumber = (char * ) malloc(sizeof(char) * (2 + size));
         negativeNumber[0] = '-';
+        negativeNumber[1] = '\0';
         strcat(negativeNumber, newNumber);
         newNumber = negativeNumber;
     }
