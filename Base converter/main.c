@@ -44,11 +44,11 @@ int currentBaseIsValid()
     size_t i = 0;
     while (number[i] != '\000')
     {
-        if(number[i] != '.')
+        if(number[i] != '.' && number[i] != ',')
         {
             int intNumber;
             if(isalpha(number[i]))
-                intNumber = (int)number[i] - 54;
+                intNumber = (int)number[i] - 55;
             else
                 intNumber = number[i] - '0';
 
@@ -83,29 +83,6 @@ int currentBaseIsCorrect()
     if (currentBase < 2 || currentBase > 36)
         return 0;
 
-    return 1;
-}
-
-int futureBaseIsValid()
-{
-    size_t i = 0;
-    while (number[i] != '\000')
-    {
-        if(number[i] != '.')
-        {
-            int intNumber;
-            if(isalpha(number[i]))
-                intNumber = (int)number[i] - 54;
-            else
-                intNumber = number[i] - '0';
-            if(intNumber >= futureBase)
-            {
-                return 0;
-            }
-
-        }
-        i++;
-    }
     return 1;
 }
 
@@ -212,8 +189,8 @@ char* invertString(char* array)
 
 int getCommaPosition(char number[], int size)
 {
-    int i = 0;
-    for (; i < size; i++)
+    int i;
+    for (i = 0; i < size; i++)
     {
         if (number[i] == ',' || number[i] == '.')
         {
@@ -256,7 +233,6 @@ char * fromTen(double number, int base)
 
     if (decimal > 0.0)
     {
-
         inverted = resizeArray(inverted, time, time + 10);
 
         inverted[time] = ',';
@@ -287,7 +263,7 @@ double toTen(char * number, int base)
     comma = getCommaPosition(number, size);
 
     if (comma == -1)
-        comma = size - 1;
+        comma = size;
 
     for (index = comma - 1, powerIndex = 0; index >= 0; index--, powerIndex++)
     {
@@ -295,7 +271,7 @@ double toTen(char * number, int base)
         newNumber = newNumber + value * pow(base, powerIndex);
     }
 
-    if (comma != size - 1)
+    if (comma != size)
     {
         for (index = comma + 1, powerIndex = 1; index < size - 1; index++, powerIndex++)
         {
@@ -315,7 +291,7 @@ int main()
     doAsciiArt();
     number = (char *) malloc(1000 * sizeof(char));
 
-    printf("\n        Developed by: Eduardo Migueis - 19167 and Rodrigo Smith - 19197\n");
+    printf("\n        Developed by: Eduardo Migueis - 19167, Manuela Benassi - 19184 and Rodrigo Smith - 19197\n");
     fflush(stdout);
 
     printf("\n  Enter the number to be converted: ");
@@ -377,6 +353,16 @@ int main()
     }
 
     printf("\n  Result: %s\n\n", newNumber);
+    printf("\n  Do you want to restart the program? Type [Y] for YES or anything for NO.  ");
+
+    char option;
+    scanf("%c", &option);
+
+    if(option == 'Y' || option == 'y')
+    {
+        printf("\n\n");
+        main();
+    }
 
     return 0;
 }
