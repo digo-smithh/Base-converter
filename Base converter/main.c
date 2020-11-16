@@ -27,7 +27,7 @@ void doAsciiArt()
 
     if ((arq = fopen("assets/title.txt", "r")) == 0)
     {
-        puts("Erro");
+        puts("Error trying to show the ASCII Art");
     }
     else
     {
