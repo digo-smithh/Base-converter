@@ -291,7 +291,7 @@ int main()
     doAsciiArt();
     number = (char *) malloc(1000 * sizeof(char));
 
-    printf("\n        Developed by: Eduardo Migueis - 19167, Manuela Benassi - 19184 and Rodrigo Smith - 19197\n");
+    printf("\n        Developed by: Eduardo Migueis - 19167 and Rodrigo Smith - 19197\n");
     fflush(stdout);
 
     printf("\n  Enter the number to be converted: ");
